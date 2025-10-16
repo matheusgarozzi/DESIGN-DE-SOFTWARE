@@ -1,0 +1,34 @@
+public class MainPerfil {
+    public static void main(String[] args) {
+        // 1. Cria o Originator e o Caretaker
+        PerfilUsuario perfil = new PerfilUsuario("Ana Silva", "ana.s@email.com");
+        HistoricoPerfil historico = new HistoricoPerfil();
+
+        perfil.exibirPerfil();
+
+        // 2. Primeira alteração de nome e email
+        historico.salvarMemento(perfil.salvarEstado()); // Salva o estado "Ana Silva"
+        perfil.setEstado("Ana Beatriz Silva", "ana.beatriz@email.com");
+        perfil.exibirPerfil();
+
+        // 3. Segunda alteração (apenas do email)
+        historico.salvarMemento(perfil.salvarEstado()); // Salva o estado "Ana Beatriz Silva"
+        perfil.setEstado("Ana Beatriz Silva", "ana.nova@email.com");
+        perfil.exibirPerfil();
+
+        System.out.println("\n--- Iniciando Desfazer (Undo) ---");
+
+        // 4. Desfaz a última alteração (volta o email para "ana.beatriz@email.com")
+        PerfilMemento m1 = historico.desfazer();
+        perfil.restaurar(m1);
+        perfil.exibirPerfil();
+
+        // 5. Desfaz mais uma alteração (volta o nome e email para o estado inicial)
+        PerfilMemento m2 = historico.desfazer();
+        perfil.restaurar(m2);
+        perfil.exibirPerfil();
+
+        // 6. Tentativa de desfazer quando não há mais histórico
+        historico.desfazer();
+    }
+}
